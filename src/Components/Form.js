@@ -38,23 +38,37 @@ function Form() {
     <div>
       <h1>Hi, enter a movie :)!</h1>
       <h2>current guesses: {guess}</h2>
-
-       {guess > 1 ? (
-        <div>
-        <h6>Old guesses </h6>
-        <ul className='no-bullets'>
+        <table className="styled-table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Director(s)</th>
+            <th>Release Date</th>
+            <th>US Box Office</th>
+            <th>Running Time</th>
+            <th>IMDB Rating</th>
+          </tr>
+        </thead>
+          <tbody>
           {prevGuesses.map((pg) =>
-          <li key={pg.id}> 
-            <p> Title: {pg.Title},  
-            Director: {pg.Director}, 
-            Release Date: {pg.ReleaseDate}, 
-            US Box Office: {pg.BoxOfficeGross},
-            Running Time: {pg.Runtime},
-            IMDB Rating: {pg.imdbRating}</p>
-          </li>)}
-        </ul>
-        </div>
-      ) : null}
+          <tr key={pg.id}> 
+            <td> {pg.Title} </td>
+            <td>{pg.Director} </td>
+            <td>{pg.ReleaseDate} </td>
+            <td> ${pg.BoxOfficeGross} </td>
+            <td> {pg.Runtime} min </td>
+            <td> {pg.imdbRating} </td>
+          </tr>)}
+          {movie ? (<tr className="active-row"> 
+            <td> {movie.Title} </td>
+            <td>{movie.Director} </td>
+            <td>{movie.ReleaseDate} </td>
+            <td> ${movie.BoxOfficeGross} </td>
+            <td> {movie.Runtime} min </td>
+            <td> {movie.imdbRating} </td>
+          </tr>) : null }
+          </tbody>
+          </table>
 
       {movie ? (<div>
         <h4>Current Movie Title is: {movie.Title}</h4>
@@ -64,6 +78,7 @@ function Form() {
         <p>Running Time: {movie.Runtime}</p>
         <p>IMDB Rating: {movie.imdbRating}</p>
       </div>) : null }
+      
 
 
       <Formik

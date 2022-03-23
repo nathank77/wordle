@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import requests
+from app.models import Movie
+from datetime import datetime
 
 
-def generate_random_movie():
+def generate_random_movie_():
     url = "https://www.bestrandoms.com/random-movie-generator"
 
     options = webdriver.ChromeOptions()
@@ -32,3 +35,39 @@ def generate_random_movie():
 
     driver.close()
     return movie_title.split('(')[0]
+
+
+def search_movie_(title):
+    url = "http://www.omdbapi.com/?t=" + title + "&apikey=e234192c"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        if 'Title' in data and 'BoxOffice' in data:
+
+            release = datetime.strptime(data['Released'], "%d %b %Y")
+            runtime = [int(s) for s in data['Runtime'].split() if s.isdigit()][0]
+
+            txt = data['BoxOffice'].split('$')[1].split(',')
+            txt = ''.join(txt)
+            box_office = float(txt)
+
+            movie = Movie(data['Title'],
+                          data['Director'],
+                          release,
+                          runtime,
+                          float(data['imdbRating']),
+                          box_office)
+            return movie
+    return False
+
+
+def compare_movies_(guess, target):
+    guess = search_movie_(guess)
+    target = search_movie_(target)
+
+    if not guess or not target:
+        return False
+
+    return guess == target
